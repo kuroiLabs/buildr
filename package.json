@@ -1,0 +1,83 @@
+{
+	"name": "buildr",
+	"displayName": "buildr",
+	"description": "buildr is a multithreaded .NET application for streamlining multi-project, interdependent build processes.",
+	"version": "0.0.1",
+	"author": "kuro <kuro@kuroi.io>",
+	"icon": "images/kuroi.png",
+	"publisher": "kuroiLabs",
+	"engines": {
+		"vscode": "^1.64.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "out/vscode/main.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "buildr.start",
+				"title": "buildr: Start"
+			},
+			{
+				"command": "buildr.reset",
+				"title": "buildr: Reset"
+			},
+			{
+				"command": "buildr.stop",
+				"title": "buildr: Stop"
+			},
+			{
+				"command": "buildr.build",
+				"title": "buildr: Build"
+			},
+			{
+				"command": "buildr.buildfull",
+				"title": "buildr: Build (non-incremental)"
+			},
+			{
+				"command": "buildr.buildall",
+				"title": "buildr: Build All"
+			},
+			{
+				"command": "buildr.buildallfull",
+				"title": "buildr: Build All (non-incremental)"
+			}
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kuromakes/buildr.git"
+	},
+	"scripts": {
+		"compile:cli": "dotnet publish -r win-x64 /property:Version=0.0.1",
+		"postcompile:cli": "shx cp README.md dist && shx cp CHANGELOG.md dist",
+		"precompile:vscode": "shx rm -rf out/vscode && npm run compile:cli",
+		"compile:vscode": "esbuild ./src/vscode/main.ts --bundle --outfile=out/vscode/main.js --sourcemap --external:vscode --format=cjs --platform=node",
+		"vscode:prepublish": "npm run compile:vscode",
+		"package:vscode": "vsce package --out ./dist/",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.0",
+		"@types/node": "14.x",
+		"@types/vscode": "^1.64.0",
+		"@typescript-eslint/eslint-plugin": "^5.12.1",
+		"@typescript-eslint/parser": "^5.12.1",
+		"@vscode/test-electron": "^2.1.2",
+		"esbuild": "^0.14.24",
+		"eslint": "^8.9.0",
+		"glob": "^7.2.0",
+		"mocha": "^9.2.1",
+		"shx": "^0.3.4",
+		"typescript": "^4.5.5",
+		"vsce": "^2.6.7"
+	}
+}
